@@ -10,7 +10,7 @@ Run `python -m http.server 8081 --bind 127.0.0.1` in this directory.
 
 ## Opening and performance
 
-`cursor-build.js` and `cursor-build.css` are Cuican's original page-build choreography: measured elements, colored cursors with production roles, selection frames, dimension labels, typed reveals, progress, replay and skip. It plays on every load, respects reduced-motion preferences, stops on Escape, scrolling, resizing or navigation, and does not capture or transmit page snapshots. It is a website-specific opening, not a generic browser-extension engine.
+`cursor-build.js` and `cursor-build.css` are Cuican's original page-build choreography: measured elements, colored cursors with production roles, selection frames, dimension labels, typed reveals, progress, replay and skip. The hero plays on load; services, about, process, contact and footer elements build on first scroll into view. Batches are limited to 12 targets and 4 mobile / 6 desktop cursors. Scrolling keeps selection frames aligned; offscreen unfinished elements are immediately restored and may build when revisited. Escape or Skip bypasses the current viewport, replay resets the page, and reduced-motion preferences show content immediately. No page snapshots are captured or transmitted. It is site-specific animation, not a generic browser-extension engine.
 
 The opening does not use or distribute the unlicensed `DhvanilPatel/swarm-cursors` / `califa/swarm-site` engine. Earlier local evaluation files are excluded from the public package.
 
