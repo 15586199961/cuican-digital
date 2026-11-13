@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>璀粲数字科技 · AI 创意广告制作</title>
 <meta name="description" content="武汉璀粲数字科技有限公司，利用 AI 生产线制作创意广告，连接创意策划、视觉制作与后期交付。">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 24'%3E%3Crect width='22' height='24' fill='%234a4d44'/%3E%3Cpath fill='%23fff' d='M11 1.3c-2.1 0-3.95 1.2-4.75 2.95C3.95 4.55 2.3 6.25 2.3 8.35c0 2.3 1.9 4.2 4.3 4.2h8.8c2.4 0 4.3-1.9 4.3-4.2 0-2.1-1.65-3.8-4-4.1C14.95 2.5 13.1 1.3 11 1.3Z'/%3E%3Cpath fill='%23fff' d='M9.6 12.55h2.8v4.2c1.35.3 2.45 1.15 3.15 2.4-1.35.4-2.4.15-3.15-.4v4.15H9.6v-4.15c-.75.55-1.8.8-3.15.4.7-1.25 1.8-2.1 3.15-2.4v-4.2Z'/%3E%3C/svg%3E">
+<link rel="icon" href="assets/favicon.svg">
 <script>document.documentElement.className += " js";</script>
 <style>
 
@@ -707,22 +707,23 @@
 </style>
 <link rel="stylesheet" href="renewal.css?v=3">
 <link rel="stylesheet" href="polish.css?v=1">
+<link rel="stylesheet" href="ad-studio.css?v=1">
 <link rel="alternate" hreflang="zh-CN" href="zh.html"><link rel="alternate" hreflang="en" href="index.html">
 <link rel="stylesheet" href="cursor-build.css?v=1">
 </head>
 <body>
 
 <nav class="cc-language" aria-label="语言 / Language"><a href="zh.html" lang="zh-CN" hreflang="zh-CN" aria-current="page">中文</a><span>/</span><a href="index.html" lang="en" hreflang="en">EN</a></nav>
-<main class="hero" id="hero">
-  <picture class="cc-scene-still" aria-hidden="true"><source media="(max-width:900px)" srcset="inner-green-assets/scene-mobile.webp"><img src="inner-green-assets/scene-desktop.webp" alt="" fetchpriority="high" decoding="async"></picture><canvas id="scene" aria-hidden="true"></canvas>
-
+<main class="hero cc-ad-hero" id="hero">
+ <picture class="cc-artwork" aria-hidden="true"><source media="(max-width:700px)" srcset="assets/ad-studio-mobile.webp"><img src="assets/ad-studio.webp" alt="" fetchpriority="high" decoding="async"></picture>
+ <div class="cc-studio-shade" aria-hidden="true"></div>
   <div class="dock-wrap">
     <nav class="dock par-dock" style="--pd:5" data-spec aria-label="Primary">
       <a class="dock-item dock-mark" data-dock data-spec data-burst href="#" style="--d:120ms" aria-label="璀粲首页"><span class="cc-symbol">璀</span>
       </a>
       <a class="dock-item is-active" data-dock data-spec data-burst href="#" style="--d:180ms">
         <span class="glyph" aria-hidden="true">
-          <svg viewBox="0 0 16 16"><path d="M8 14V9"/><path d="M8 9c0-2.4 1.7-4.3 4-4.3.2 2.6-1.6 4.6-4 4.3Z"/><path d="M8 10.5C7.9 8.4 6.4 6.8 4.4 6.8 4.3 8.9 5.9 10.6 8 10.5Z"/></svg>
+          <svg viewBox="0 0 16 16"><rect x="2" y="3.5" width="12" height="9" rx="1.5"/><path d="m6.5 5.8 3.5 2.2-3.5 2.2Z"/></svg>
         </span>
         <span>璀粲</span>
       </a>
@@ -746,125 +747,16 @@
       </a>
     </nav>
   </div>
-
-  <div class="stage" id="stage">
-
-    <div class="guides fade" style="--d:900ms" aria-hidden="true">
-      <i style="left:calc(405 * var(--u))"></i>
-      <i style="left:calc(748 * var(--u))"></i>
-      <i style="left:calc(1091 * var(--u))"></i>
-    </div>
-
-    <div class="ghost fade" style="--d:1150ms" aria-hidden="true">CUICAN</div>
-
-    <!-- card 1 sits *behind* the canvas so the moss drapes over its shoulder -->
-    <article class="card card--about mask" style="--d:760ms; --pd:10; --pr:2.2">
-      <figure class="portal" data-delay="920">
-        <span class="portal-media"><img src="inner-green-assets/card-ethos.jpg" alt="A cushion of moss grown over lichen-crusted stones" loading="eager" decoding="async"></span>
-        <canvas class="pixel-reveal" aria-hidden="true"></canvas>
-      </figure>
-      <p class="label">AI 创意广告</p>
-      <h2>让创意，<br>成为广告。</h2>
-    </article>
-
-    <!-- the About knob rides *outside* the card: the card has to stay a plain
-         painted box under #scene, so anything that must sit in front of the
-         moss lives here instead, sharing the card's parallax origin -->
-    <span class="knob-float" style="--pd:10; --pr:2.2">
-      <button class="knob knob--about mask-circle" style="--d:1100ms" aria-label="了解 AI 创意广告制作">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 21v-7"/><path d="M12 14c0-3.3 2.4-6 5.5-6 .3 3.6-2.2 6.4-5.5 6Z"/>
-          <path d="M12 16c-.1-2.9-2.2-5.2-4.9-5.2C6.8 13.7 9 16 12 16Z"/>
-        </svg>
-      </button>
-    </span>
-
-    <h1 class="headline" style="--pd:18; --pr:1.2">
+ <div class="stage" id="stage">
+ <h1 class="headline" style="--pd:18; --pr:1.2">
       <span><i style="--d:260ms">让创意发生</i></span>
       <span><i style="--d:360ms">让品牌被记住</i></span>
     </h1>
-
-    <p class="lede mask" style="--d:480ms; --pd:14; --pr:1">AI 生产线 · 创意广告制作<br>从一个好想法，到一支有表达的广告。</p>
-
-    <a class="cc-hero-cta" href="#services">探索创意服务<span aria-hidden="true">↗</span></a>
-    <div class="pill-clip">
-      <div class="pill mask" style="--d:600ms; --pd:15; --pr:1.4">
-        <div class="liquid-stage liquid-stage--explore" data-liquid-metal="explore">
-          <div class="liquid-plate plate" aria-hidden="true"></div>
-          <canvas class="liquid-fx" aria-hidden="true"></canvas>
-          <button class="liquid-button liquid-button--explore btn" type="button">
-            <svg class="ico" viewBox="0 0 115 115" aria-hidden="true">
-              <g stroke="currentColor" stroke-width="11" stroke-linecap="round">
-                <path d="M14 34.5 H101"/>
-                <path d="M14 57.5 H101"/>
-                <path d="M14 80.5 H68"/>
-              </g>
-            </svg>
-            <span class="lbl">探索我们的业务</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <span class="play-wrap" style="--pd:20">
-      <span class="play-clip">
-        <span class="play-glass mask-circle" style="--d:900ms">
-          <span class="liquid-stage liquid-stage--play" data-liquid-metal="play">
-            <span class="liquid-plate plate" aria-hidden="true"></span>
-            <canvas class="liquid-fx" aria-hidden="true"></canvas>
-            <button class="liquid-button liquid-button--play btn" type="button" aria-label="了解广告内容延展">
-              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M8 5.2v13.6L19 12z" fill="currentColor"/>
-              </svg>
-            </button>
-          </span>
-        </span>
-      </span>
-      <span class="play-ring mask-circle" style="--d:840ms" aria-hidden="true"></span>
-    </span>
-
-    <dl class="stat stat--a mask" style="--d:700ms; --pd:12">
-      <span class="mark" aria-hidden="true">
-        <svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
-          <circle cx="15" cy="15" r="10.5" stroke-dasharray="0.6 3.6"/>
-          <circle cx="15" cy="15" r="5.6" stroke-dasharray="0.6 3.2"/>
-          <circle cx="15" cy="15" r="1.1" fill="currentColor" stroke="none"/>
-        </svg>
-      </span>
-      <div><dt>创意驱动</dt><dd>从品牌出发</dd></div>
-    </dl>
-
-    <dl class="stat stat--b mask" style="--d:770ms; --pd:13">
-      <span class="mark" aria-hidden="true">
-        <svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
-          <g id="rays">
-            <path d="M15 3.5v5"/><path d="M15 21.5v5"/><path d="M3.5 15h5"/><path d="M21.5 15h5"/>
-            <path d="M6.9 6.9l3.5 3.5"/><path d="M19.6 19.6l3.5 3.5"/><path d="M23.1 6.9l-3.5 3.5"/><path d="M10.4 19.6l-3.5 3.5"/>
-          </g>
-          <circle cx="15" cy="15" r="3.6"/>
-        </svg>
-      </span>
-      <div><dt>AI 生产线</dt><dd>让创意落地</dd></div>
-    </dl>
-
-    <article class="card card--stove mask" style="--d:880ms; --pd:22; --pr:2.4">
-      <p class="label">品牌内容</p>
-      <h2>让品牌，有自己的表达。</h2>
-      <figure class="portal" data-delay="1080">
-        <span class="portal-media"><img src="inner-green-assets/card-ecostove.jpg" alt="Moss-covered boulders in a misty grove" loading="eager" decoding="async"></span>
-        <canvas class="pixel-reveal" aria-hidden="true"></canvas>
-      </figure>
-      <button class="knob" aria-label="了解品牌广告内容">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 21v-7"/><path d="M12 14c0-3.3 2.4-6 5.5-6 .3 3.6-2.2 6.4-5.5 6Z"/>
-          <path d="M12 16c-.1-2.9-2.2-5.2-4.9-5.2C6.8 13.7 9 16 12 16Z"/>
-        </svg>
-      </button>
-    </article>
-
-    <a class="scroll mask" style="--d:1040ms; --pd:9" href="#">探索更多<span class="track"></span></a>
-
-  </div>
+ <p class="lede mask" style="--d:480ms; --pd:14; --pr:1">AI 生产线 · 创意广告制作<br>从一个好想法，到一支有表达的广告。</p>
+ <a class="cc-hero-cta" href="#services">探索创意服务<span aria-hidden="true">↗</span></a>
+ <p class="cc-hero-caption">创意策划 / AI 制作 / 广告成片</p>
+ <a class="scroll" href="#services">探索服务<span class="track"></span></a>
+ </div>
 </main>
 
 
@@ -877,13 +769,13 @@
 <article id="content"><span class="cc-num">01</span><h3>广告创意策划</h3><p>从品牌、产品与受众出发，找到广告的表达方式。</p><ul><li>品牌需求与传播主题梳理</li><li>广告创意与脚本策划</li><li>分镜设计与视觉方向探索</li></ul><span class="cc-type">IDEA & DIRECTION</span></article>
 <article id="animation"><span class="cc-num">02</span><h3>AI 创意广告制作</h3><p>用 AI 生产线连接画面、动态与声音，让创意成为成片。</p><ul><li>角色、产品与场景视觉制作</li><li>AI 动画与广告镜头制作</li><li>剪辑、声音与后期整合</li></ul><span class="cc-type">AI AD PRODUCTION</span></article>
 <article id="game"><span class="cc-num">03</span><h3>广告内容延展</h3><p>围绕同一个创意，探索不同媒介中的品牌表达。</p><ul><li>短视频与账号内容</li><li>动画叙事与系列内容</li><li>互动体验与游戏化创意</li></ul><span class="cc-type">CONTENT & EXPERIENCE</span></article></div></section>
-<section id="about" class="cc-about"><div class="cc-photo"><img src="inner-green-assets/card-ecostove.jpg" alt="薄雾中生长的苔藓与植物，用作创意生长的概念视觉" loading="lazy"><span>让创意，自然生长。</span></div><div><h2>让好创意，<br>走进广告生产线。</h2><p>武汉璀粲数字科技有限公司，专注创意广告制作，利用 AI 生产线将创意转化为广告内容。</p><p>我们从品牌需求与创意表达出发，将脚本、分镜、AI 视觉制作和后期整合连接起来。AI 参与生产，审美、叙事与人工把控贯穿制作，让每一个镜头服务于广告想传递的信息。</p><small>本页生态场景为创意概念视觉，非客户项目展示。</small></div></section>
+<section id="about" class="cc-about"><div class="cc-photo"><img src="assets/ad-studio-mobile.webp" alt="橙色胶片带与金属画幅组成的原创广告工作室概念视觉" loading="lazy"><span>从第一帧，到广告成片。</span></div><div><h2>让好创意，<br>走进广告生产线。</h2><p>武汉璀粲数字科技有限公司，专注创意广告制作，利用 AI 生产线将创意转化为广告内容。</p><p>我们从品牌需求与创意表达出发，将脚本、分镜、AI 视觉制作和后期整合连接起来。AI 参与生产，审美、叙事与人工把控贯穿制作，让每一个镜头服务于广告想传递的信息。</p><small>本页工作室画面为 AI 生成的概念视觉，非客户广告案例。</small></div></section>
 <section class="cc-process"><h2>一条生产线，围绕一个好创意。</h2><ol><li><b>01</b><h3>理解品牌</h3><p>明确产品、受众、传播目标与交付需求。</p></li><li><b>02</b><h3>创意与分镜</h3><p>确定广告概念、脚本、视觉风格与镜头设计。</p></li><li><b>03</b><h3>AI 制作与把控</h3><p>推进视觉与动态镜头制作，人工筛选、调整与整合。</p></li><li><b>04</b><h3>后期与交付</h3><p>完成剪辑与声音整合，按约定交付广告成片。</p></li></ol></section>
 <section id="contact" class="cc-contact"><h2>下一支创意广告，<br>从你的品牌开始。</h2><div><p>告诉我们你的产品、受众与想表达的内容。<br>一起，把品牌的想法做成广告。</p><div class="cc-contact-links"><div class="cc-contact-channel"><span>WeChat</span><p data-wechat-account>微信号待补充</p><button type="button" data-copy-wechat hidden>复制微信号</button></div><div class="cc-contact-channel"><span>X</span><p data-x-profile>主页链接待补充</p></div><p class="cc-contact-status" role="status" data-contact-status></p></div></div></section>
 <footer class="cc-footer"><strong>璀粲 <small>数字科技</small></strong><span>© 2026 武汉璀粲数字科技有限公司</span><a href="#hero">回到顶部 ↑</a></footer>
-<aside class="cc-credit">生态首屏基于 <a href="https://github.com/MengTo/threeui" target="_blank" rel="noopener">ThreeUI / Sylva</a> 开源作品改编 · MIT License</aside>
+<aside class="cc-credit">界面元素参考 <a href="https://github.com/MengTo/threeui" target="_blank" rel="noopener">ThreeUI / Sylva</a> 开源作品改编 · MIT License</aside>
 </div><script src="renewal.js?v=2"></script>
 
-<script src="contacts.js"></script><script src="light-scene.js"></script><script src="cursor-build.js?v=1"></script>
+<script src="contacts.js"></script><script src="studio-scene.js"></script><script src="cursor-build.js?v=1"></script>
 </body>
 </html>

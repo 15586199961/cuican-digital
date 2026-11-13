@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cuican Digital | AI-Powered Creative Advertising</title>
 <meta name="description" content="Cuican Digital creates original advertising through an AI-powered production pipeline, from concept and visual development to post-production.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 24'%3E%3Crect width='22' height='24' fill='%234a4d44'/%3E%3Cpath fill='%23fff' d='M11 1.3c-2.1 0-3.95 1.2-4.75 2.95C3.95 4.55 2.3 6.25 2.3 8.35c0 2.3 1.9 4.2 4.3 4.2h8.8c2.4 0 4.3-1.9 4.3-4.2 0-2.1-1.65-3.8-4-4.1C14.95 2.5 13.1 1.3 11 1.3Z'/%3E%3Cpath fill='%23fff' d='M9.6 12.55h2.8v4.2c1.35.3 2.45 1.15 3.15 2.4-1.35.4-2.4.15-3.15-.4v4.15H9.6v-4.15c-.75.55-1.8.8-3.15.4.7-1.25 1.8-2.1 3.15-2.4v-4.2Z'/%3E%3C/svg%3E">
+<link rel="icon" href="assets/favicon.svg">
 <script>document.documentElement.className += " js";</script>
 <style>
 
@@ -707,22 +707,23 @@
 </style>
 <link rel="stylesheet" href="renewal.css?v=3">
 <link rel="stylesheet" href="polish.css?v=1">
+<link rel="stylesheet" href="ad-studio.css?v=1">
 <link rel="alternate" hreflang="zh-CN" href="zh.html"><link rel="alternate" hreflang="en" href="index.html">
 <link rel="stylesheet" href="cursor-build.css?v=1">
 </head>
 <body>
 
 <nav class="cc-language" aria-label="Language"><a href="zh.html" lang="zh-CN" hreflang="zh-CN">中文</a><span>/</span><a href="index.html" lang="en" hreflang="en" aria-current="page">EN</a></nav>
-<main class="hero" id="hero">
-  <picture class="cc-scene-still" aria-hidden="true"><source media="(max-width:900px)" srcset="inner-green-assets/scene-mobile.webp"><img src="inner-green-assets/scene-desktop.webp" alt="" fetchpriority="high" decoding="async"></picture><canvas id="scene" aria-hidden="true"></canvas>
-
+<main class="hero cc-ad-hero" id="hero">
+ <picture class="cc-artwork" aria-hidden="true"><source media="(max-width:700px)" srcset="assets/ad-studio-mobile.webp"><img src="assets/ad-studio.webp" alt="" fetchpriority="high" decoding="async"></picture>
+ <div class="cc-studio-shade" aria-hidden="true"></div>
   <div class="dock-wrap">
     <nav class="dock par-dock" style="--pd:5" data-spec aria-label="Primary">
       <a class="dock-item dock-mark" data-dock data-spec data-burst href="#" style="--d:120ms" aria-label="Cuican home"><span class="cc-symbol">璀</span>
       </a>
       <a class="dock-item is-active" data-dock data-spec data-burst href="#" style="--d:180ms">
         <span class="glyph" aria-hidden="true">
-          <svg viewBox="0 0 16 16"><path d="M8 14V9"/><path d="M8 9c0-2.4 1.7-4.3 4-4.3.2 2.6-1.6 4.6-4 4.3Z"/><path d="M8 10.5C7.9 8.4 6.4 6.8 4.4 6.8 4.3 8.9 5.9 10.6 8 10.5Z"/></svg>
+          <svg viewBox="0 0 16 16"><rect x="2" y="3.5" width="12" height="9" rx="1.5"/><path d="m6.5 5.8 3.5 2.2-3.5 2.2Z"/></svg>
         </span>
         <span>Cuican</span>
       </a>
@@ -746,125 +747,16 @@
       </a>
     </nav>
   </div>
-
-  <div class="stage" id="stage">
-
-    <div class="guides fade" style="--d:900ms" aria-hidden="true">
-      <i style="left:calc(405 * var(--u))"></i>
-      <i style="left:calc(748 * var(--u))"></i>
-      <i style="left:calc(1091 * var(--u))"></i>
-    </div>
-
-    <div class="ghost fade" style="--d:1150ms" aria-hidden="true">CUICAN</div>
-
-    <!-- card 1 sits *behind* the canvas so the moss drapes over its shoulder -->
-    <article class="card card--about mask" style="--d:760ms; --pd:10; --pr:2.2">
-      <figure class="portal" data-delay="920">
-        <span class="portal-media"><img src="inner-green-assets/card-ethos.jpg" alt="A cushion of moss grown over lichen-crusted stones" loading="eager" decoding="async"></span>
-        <canvas class="pixel-reveal" aria-hidden="true"></canvas>
-      </figure>
-      <p class="label">AI AD PRODUCTION</p>
-      <h2>Ideas brought<br>to the screen.</h2>
-    </article>
-
-    <!-- the About knob rides *outside* the card: the card has to stay a plain
-         painted box under #scene, so anything that must sit in front of the
-         moss lives here instead, sharing the card's parallax origin -->
-    <span class="knob-float" style="--pd:10; --pr:2.2">
-      <button class="knob knob--about mask-circle" style="--d:1100ms" aria-label="Explore AI ad production">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 21v-7"/><path d="M12 14c0-3.3 2.4-6 5.5-6 .3 3.6-2.2 6.4-5.5 6Z"/>
-          <path d="M12 16c-.1-2.9-2.2-5.2-4.9-5.2C6.8 13.7 9 16 12 16Z"/>
-        </svg>
-      </button>
-    </span>
-
-    <h1 class="headline" style="--pd:18; --pr:1.2">
+ <div class="stage" id="stage">
+ <h1 class="headline" style="--pd:18; --pr:1.2">
       <span><i style="--d:260ms">Make ideas real.</i></span>
       <span><i style="--d:360ms">Make brands matter.</i></span>
     </h1>
-
-    <p class="lede mask" style="--d:480ms; --pd:14; --pr:1">AI-powered creative advertising.<br>From the first idea to the final film.</p>
-
-    <a class="cc-hero-cta" href="#services">Explore our services<span aria-hidden="true">↗</span></a>
-    <div class="pill-clip">
-      <div class="pill mask" style="--d:600ms; --pd:15; --pr:1.4">
-        <div class="liquid-stage liquid-stage--explore" data-liquid-metal="explore">
-          <div class="liquid-plate plate" aria-hidden="true"></div>
-          <canvas class="liquid-fx" aria-hidden="true"></canvas>
-          <button class="liquid-button liquid-button--explore btn" type="button">
-            <svg class="ico" viewBox="0 0 115 115" aria-hidden="true">
-              <g stroke="currentColor" stroke-width="11" stroke-linecap="round">
-                <path d="M14 34.5 H101"/>
-                <path d="M14 57.5 H101"/>
-                <path d="M14 80.5 H68"/>
-              </g>
-            </svg>
-            <span class="lbl">Explore our services</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <span class="play-wrap" style="--pd:20">
-      <span class="play-clip">
-        <span class="play-glass mask-circle" style="--d:900ms">
-          <span class="liquid-stage liquid-stage--play" data-liquid-metal="play">
-            <span class="liquid-plate plate" aria-hidden="true"></span>
-            <canvas class="liquid-fx" aria-hidden="true"></canvas>
-            <button class="liquid-button liquid-button--play btn" type="button" aria-label="Explore content adaptations">
-              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M8 5.2v13.6L19 12z" fill="currentColor"/>
-              </svg>
-            </button>
-          </span>
-        </span>
-      </span>
-      <span class="play-ring mask-circle" style="--d:840ms" aria-hidden="true"></span>
-    </span>
-
-    <dl class="stat stat--a mask" style="--d:700ms; --pd:12">
-      <span class="mark" aria-hidden="true">
-        <svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
-          <circle cx="15" cy="15" r="10.5" stroke-dasharray="0.6 3.6"/>
-          <circle cx="15" cy="15" r="5.6" stroke-dasharray="0.6 3.2"/>
-          <circle cx="15" cy="15" r="1.1" fill="currentColor" stroke="none"/>
-        </svg>
-      </span>
-      <div><dt>Idea-led</dt><dd>Built around your brand</dd></div>
-    </dl>
-
-    <dl class="stat stat--b mask" style="--d:770ms; --pd:13">
-      <span class="mark" aria-hidden="true">
-        <svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
-          <g id="rays">
-            <path d="M15 3.5v5"/><path d="M15 21.5v5"/><path d="M3.5 15h5"/><path d="M21.5 15h5"/>
-            <path d="M6.9 6.9l3.5 3.5"/><path d="M19.6 19.6l3.5 3.5"/><path d="M23.1 6.9l-3.5 3.5"/><path d="M10.4 19.6l-3.5 3.5"/>
-          </g>
-          <circle cx="15" cy="15" r="3.6"/>
-        </svg>
-      </span>
-      <div><dt>AI-powered</dt><dd>Made for production</dd></div>
-    </dl>
-
-    <article class="card card--stove mask" style="--d:880ms; --pd:22; --pr:2.4">
-      <p class="label">BRAND CONTENT</p>
-      <h2>Give your brand a voice.</h2>
-      <figure class="portal" data-delay="1080">
-        <span class="portal-media"><img src="inner-green-assets/card-ecostove.jpg" alt="Moss-covered boulders in a misty grove" loading="eager" decoding="async"></span>
-        <canvas class="pixel-reveal" aria-hidden="true"></canvas>
-      </figure>
-      <button class="knob" aria-label="Explore advertising concepts">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 21v-7"/><path d="M12 14c0-3.3 2.4-6 5.5-6 .3 3.6-2.2 6.4-5.5 6Z"/>
-          <path d="M12 16c-.1-2.9-2.2-5.2-4.9-5.2C6.8 13.7 9 16 12 16Z"/>
-        </svg>
-      </button>
-    </article>
-
-    <a class="scroll mask" style="--d:1040ms; --pd:9" href="#">Discover<span class="track"></span></a>
-
-  </div>
+ <p class="lede mask" style="--d:480ms; --pd:14; --pr:1">AI-powered creative advertising.<br>From the first idea to the final film.</p>
+ <a class="cc-hero-cta" href="#services">Explore our services<span aria-hidden="true">↗</span></a>
+ <p class="cc-hero-caption">Creative direction / AI production / Film</p>
+ <a class="scroll" href="#services">Discover<span class="track"></span></a>
+ </div>
 </main>
 
 
@@ -877,13 +769,13 @@
 <article id="content"><span class="cc-num">01</span><h3>Advertising Concepts</h3><p>Find the right creative direction for your brand, product and audience.</p><ul><li>Brand brief and campaign direction</li><li>Creative concepts and scripting</li><li>Storyboarding and visual development</li></ul><span class="cc-type">IDEA & DIRECTION</span></article>
 <article id="animation"><span class="cc-num">02</span><h3>AI Ad Production</h3><p>Bring visuals, motion and sound together in an AI-powered pipeline to turn ideas into finished ads.</p><ul><li>Character, product and scene visuals</li><li>AI animation and advertising shots</li><li>Editing, sound and post-production</li></ul><span class="cc-type">AI AD PRODUCTION</span></article>
 <article id="game"><span class="cc-num">03</span><h3>Content Adaptations</h3><p>Explore how one creative idea can live across different formats and experiences.</p><ul><li>Short-form video and social content</li><li>Animated stories and content series</li><li>Interactive and game-inspired concepts</li></ul><span class="cc-type">CONTENT & EXPERIENCE</span></article></div></section>
-<section id="about" class="cc-about"><div class="cc-photo"><img src="inner-green-assets/card-ecostove.jpg" alt="Moss and plants in a misty landscape, a visual metaphor for creative growth" loading="lazy"><span>Give ideas room to grow.</span></div><div><h2>A production pipeline.<br>A creative point of view.</h2><p>Based in Wuhan, Cuican Digital specializes in creative advertising, using an AI-powered production pipeline to turn ideas into advertising content.</p><p>We connect scripting, storyboarding, AI visual production and post-production around the brand brief. Human judgment, visual direction and storytelling guide the process, so every shot supports the message.</p><small>The living landscape is a concept visual, not a client project.</small></div></section>
+<section id="about" class="cc-about"><div class="cc-photo"><img src="assets/ad-studio-mobile.webp" alt="Original creative studio concept with orange film ribbon and cinema frames" loading="lazy"><span>From the first frame to the final cut.</span></div><div><h2>A production pipeline.<br>A creative point of view.</h2><p>Based in Wuhan, Cuican Digital specializes in creative advertising, using an AI-powered production pipeline to turn ideas into advertising content.</p><p>We connect scripting, storyboarding, AI visual production and post-production around the brand brief. Human judgment, visual direction and storytelling guide the process, so every shot supports the message.</p><small>The studio artwork is an AI-generated concept visual, not a client campaign.</small></div></section>
 <section class="cc-process"><h2>One pipeline. One clear creative idea.</h2><ol><li><b>01</b><h3>Understand the Brand</h3><p>Define the product, audience, communication goals and deliverables.</p></li><li><b>02</b><h3>Concept & Storyboard</h3><p>Align on the concept, script, visual style and shot design.</p></li><li><b>03</b><h3>Produce & Refine</h3><p>Create visuals and motion with AI, then select, refine and integrate them by hand.</p></li><li><b>04</b><h3>Finish & Deliver</h3><p>Complete editing and sound, then deliver the agreed advertising film.</p></li></ol></section>
 <section id="contact" class="cc-contact"><h2>Your next creative ad<br>starts with your brand.</h2><div><p>Tell us about your product, audience and message.<br>Let’s turn your brand’s idea into an ad.</p><div class="cc-contact-links"><div class="cc-contact-channel"><span>WeChat</span><p data-wechat-account>Details coming soon</p><button type="button" data-copy-wechat hidden>Copy WeChat ID</button></div><div class="cc-contact-channel"><span>X</span><p data-x-profile>Profile coming soon</p></div><p class="cc-contact-status" role="status" data-contact-status></p></div></div></section>
 <footer class="cc-footer"><strong>Cuican <small>Digital</small></strong><span>© 2026 Wuhan Cuican Digital Technology Co., Ltd.</span><a href="#hero">Back to top ↑</a></footer>
-<aside class="cc-credit">Living-world hero adapted from <a href="https://github.com/MengTo/threeui" target="_blank" rel="noopener">ThreeUI / Sylva</a> · Open-source adaptation · MIT License</aside>
+<aside class="cc-credit">Interface elements adapted from <a href="https://github.com/MengTo/threeui" target="_blank" rel="noopener">ThreeUI / Sylva</a> · Open-source adaptation · MIT License</aside>
 </div><script src="renewal.js?v=2"></script>
 
-<script src="contacts.js"></script><script src="light-scene.js"></script><script src="cursor-build.js?v=1"></script>
+<script src="contacts.js"></script><script src="studio-scene.js"></script><script src="cursor-build.js?v=1"></script>
 </body>
 </html>

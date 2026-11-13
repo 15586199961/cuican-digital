@@ -33,7 +33,7 @@ function worker(i){
 }
 function begin(){
  if(running)finish();if(motion.matches){finish();return;}
- const selectors=['.dock','.cc-language','.headline span:first-child','.headline span:last-child','.lede','.cc-hero-cta','.cc-scene-still','.card--about','.knob-float','.card--stove'];
+ const selectors=['.dock','.cc-language','.headline span:first-child','.headline span:last-child','.lede','.cc-hero-cta','.cc-artwork','.cc-hero-caption'];
  const nodes=selectors.map(s=>document.querySelector(s)).filter(Boolean).filter(el=>{const r=el.getBoundingClientRect();return r.width>2&&r.height>2&&r.bottom>0&&r.top<innerHeight&&getComputedStyle(el).display!=='none';});
  if(!nodes.length){finish();return;}
  workers=Array.from({length:Math.min(innerWidth<650?4:6,nodes.length)},(_,i)=>worker(i));
@@ -42,7 +42,7 @@ function begin(){
   const box=document.createElement('div');box.className='cc-build-box';box.style.setProperty('--cursor',palette[lane]);
   Object.assign(box.style,{left:r.left+'px',top:r.top+'px'});
   const measure=document.createElement('span');measure.className='cc-build-measure';box.append(measure);root.append(box);
-  const text=el.matches('.headline span,.lede');const scene=el.classList.contains('cc-scene-still');
+  const text=el.matches('.headline span,.lede');const scene=el.classList.contains('cc-artwork');
   el.style.willChange='clip-path,opacity';el.style.opacity=scene?'.28':'0';el.style.clipPath='inset(0 100% 0 0)';
   return{el,r,box,measure,lane,text,scene,done:false,from:null,start:Math.floor(i/workers.length)*1120+lane*95,duration:scene?980:910,letters:Math.max(10,el.textContent.trim().length)};
  });

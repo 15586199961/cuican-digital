@@ -14,17 +14,17 @@ Run `python -m http.server 8081 --bind 127.0.0.1` in this directory.
 
 The opening does not use or distribute the unlicensed `DhvanilPatel/swarm-cursors` / `califa/swarm-site` engine. Earlier local evaluation files are excluded from the public package.
 
-The forest scene initially uses locally hosted pre-rendered WebP images: 113,588 bytes desktop and 24,810 bytes mobile. Three.js and procedural geometry load only when a visitor chooses “Enable live 3D”. Actual frame rates depend on the device; no fixed rate is guaranteed.
+The advertising-studio artwork uses local WebP images: 59,490 bytes desktop and 21,494 bytes mobile. There are no plants, procedural geometry, WebGL contexts or Three.js downloads in this release. Actual animation frame rates depend on the device.
 
 ## Credits and licenses
 
-- Living-world scene adapted from [ThreeUI / Sylva](https://github.com/MengTo/threeui), MIT; see `THREEUI-LICENSE.txt`.
-- Three.js retains its upstream copyright and MIT license in the distributed library.
+- Navigation and interface elements adapted from [ThreeUI / Sylva](https://github.com/MengTo/threeui), MIT; see `THREEUI-LICENSE.txt`. The forest scene has been removed.
+- Advertising-studio concept artwork generated for this site using the built-in Imagegen tool; no client campaign is implied.
 - Manrope variable font, SIL Open Font License; see `fonts/OFL.txt`.
 - The company content and site-specific code are not offered under a blanket open-source license.
 
 WeChat: `an941234567890`. X: <https://x.com/muhammudvalero>.
-No invented clients, testimonials, performance figures or registration numbers are displayed. The landscape is a concept visual, not a client project. The English company name is a working translation.
+No invented clients, testimonials, performance figures or registration numbers are displayed. The studio artwork is an AI-generated concept visual, not a client campaign. The English company name is a working translation.
 
 ## Hosting
 
