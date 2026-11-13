@@ -39,7 +39,7 @@ html,body{background:#242321;color:var(--cc-paper)}
  .cc-ad-hero .headline,html[lang=en] .cc-ad-hero .headline{left:24px;top:145px;width:calc(100% - 48px);font-size:clamp(30px,7.7vw,42px)}
  .cc-ad-hero .lede,html[lang=en] .cc-ad-hero .lede{left:24px;top:245px;width:calc(100% - 48px);font-size:14px}
  .cc-ad-hero .cc-hero-cta{left:24px;top:325px;font-size:12px;min-height:44px}
- .cc-hero-caption{left:24px;bottom:28px;max-width:200px;font-size:10px}
+ .cc-hero-caption{left:24px;bottom:28px;max-width:200px;font-size:11px}
  .cc-studio-shade{background:linear-gradient(180deg,#242321 0%,#242321 33%,#24232100 61%,#24232155 100%)}
  .cc-photo{aspect-ratio:1.1}.cc-photo span{font-size:23px;bottom:22px;left:22px}
  .cc-build-controls{right:12px;bottom:12px}.cc-ad-hero .dock-wrap{top:22px}
