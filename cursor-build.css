@@ -1,0 +1,15 @@
+.cc-build-overlay{position:fixed;inset:0;z-index:90;pointer-events:none;overflow:hidden}
+.cc-build-cursor{position:absolute;left:0;top:0;opacity:0;will-change:transform;color:var(--cursor);transition:opacity .15s}
+.cc-build-cursor svg{display:block;width:18px;height:23px;fill:currentColor;stroke:#f5f7ef;stroke-width:1.2;filter:drop-shadow(0 2px 2px #17201466)}
+.cc-build-cursor>span{position:absolute;left:14px;top:22px;padding:4px 7px;border-radius:4px;background:var(--cursor);color:#202b20;font:500 10px Manrope,"Microsoft YaHei",sans-serif;white-space:nowrap;box-shadow:0 3px 8px #17201424}
+.cc-build-box{position:absolute;opacity:0;border:1px solid var(--cursor);background:transparent;pointer-events:none;transition:opacity .18s}
+.cc-build-box:before,.cc-build-box:after{content:"";position:absolute;width:5px;height:5px;background:var(--cursor);border:1px solid #eff6e6}
+.cc-build-box:before{top:-3px;left:-3px}.cc-build-box:after{bottom:-3px;right:-3px}
+.cc-build-measure{position:absolute;top:-20px;left:0;padding:2px 5px;border-radius:2px;background:var(--cursor);color:#202b20;font:10px Manrope,sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cc-build-guide{position:absolute;top:0;bottom:0;width:1px;background:#bfd6b629;animation:cc-guide-in .35s ease-out both}
+@keyframes cc-guide-in{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.cc-build-controls{position:fixed;right:18px;bottom:18px;z-index:100;display:flex;align-items:center;gap:12px;padding:5px;border:1px solid #d9e7cc55;background:#293125ed;border-radius:7px;box-shadow:0 5px 18px #15201026;color:#edf3e4;font:11px Manrope,"Microsoft YaHei",sans-serif}
+.cc-build-status{padding-left:10px;font-variant-numeric:tabular-nums}.cc-build-progress{width:48px;height:2px;background:#edf3e433;overflow:hidden}.cc-build-progress i{display:block;height:100%;background:#dce9c5;transform-origin:left;transition:transform .2s ease-out}
+.cc-build-controls button{min-height:36px;padding:9px 12px;border:0;border-radius:4px;color:inherit;background:transparent;font:inherit;cursor:pointer}.cc-build-controls button:hover{background:#ffffff16}.cc-build-controls button:focus-visible{outline:2px solid #e3f3cb;outline-offset:2px}.cc-build-controls [hidden]{display:none!important}
+@media(max-width:600px){.cc-build-controls{right:12px;bottom:12px;gap:6px;font-size:10px}.cc-build-progress{display:none}.cc-build-controls button{min-height:36px;padding:9px 10px}.cc-build-status{padding-left:7px}.cc-build-cursor>span{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.cc-build-overlay{display:none}.cc-build-controls *{transition:none;animation:none}}

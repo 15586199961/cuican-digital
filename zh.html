@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>璀粲数字科技 · AI 创意广告制作</title>
+<meta name="description" content="武汉璀粲数字科技有限公司，利用 AI 生产线制作创意广告，连接创意策划、视觉制作与后期交付。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 24'%3E%3Crect width='22' height='24' fill='%234a4d44'/%3E%3Cpath fill='%23fff' d='M11 1.3c-2.1 0-3.95 1.2-4.75 2.95C3.95 4.55 2.3 6.25 2.3 8.35c0 2.3 1.9 4.2 4.3 4.2h8.8c2.4 0 4.3-1.9 4.3-4.2 0-2.1-1.65-3.8-4-4.1C14.95 2.5 13.1 1.3 11 1.3Z'/%3E%3Cpath fill='%23fff' d='M9.6 12.55h2.8v4.2c1.35.3 2.45 1.15 3.15 2.4-1.35.4-2.4.15-3.15-.4v4.15H9.6v-4.15c-.75.55-1.8.8-3.15.4.7-1.25 1.8-2.1 3.15-2.4v-4.2Z'/%3E%3C/svg%3E">
+<script>document.documentElement.className += " js";</script>
+<style>
+
+
+  /* ── design unit: 1u === 1px on the 1600 × 880 reference frame ───────── */
+  :root{
+    --u: calc(100vw / 1600);
+
+    --ink:            #ffffff;
+    --ink-soft:       rgba(255,255,255,.62);
+    --ink-faint:      rgba(255,255,255,.44);
+    --rule:           rgba(255,255,255,.055);
+
+    --card:           #f2f3ef;
+    --card-ink:       #23261f;
+    --card-label:     #7c8177;
+
+    --ease: cubic-bezier(.22,.61,.36,1);
+    --ease-out: cubic-bezier(.16,1,.3,1);
+  }
+  @media (min-width:1900px){ :root{ --u: calc(1900px / 1600); } }
+
+  *,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ background:#383b34; }
+  body{
+    font-family:"Microsoft YaHei","PingFang SC",sans-serif;
+    font-weight:300;
+    color:var(--ink);
+    background:#383b34;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* ── hero shell ──────────────────────────────────────────────────────── */
+  .hero{
+    position:relative;
+    width:100%;
+    height:100svh;
+    min-height:calc(880 * var(--u));
+    overflow:hidden;
+    isolation:isolate;
+    /* the reference screen reads a near-flat #4a4d44 corner to corner —
+       all the modelling comes from the light pool the root sits in */
+    background:
+      radial-gradient(64% 52% at 27% 84%, rgba(232,238,222,.085) 0%, rgba(232,238,222,0) 72%),
+      radial-gradient(70% 60% at 92% 8%,  rgba(24,28,20,.10) 0%, rgba(24,28,20,0) 68%),
+      #4a4d44;
+  }
+  /* The floor of light the root stands in. Sampled off the reference: the
+     background climbs from 73 luma at the nav to ~128 at y 850, brightest
+     around the middle of the bottom edge. */
+  .hero::after{
+    content:'';
+    position:absolute; inset:0;
+    background:
+      radial-gradient(72% 44% at 50% 117%, rgba(238,243,231,.50) 0%, rgba(238,243,231,.21) 42%, rgba(238,243,231,.04) 72%, rgba(238,243,231,0) 88%),
+      linear-gradient(180deg, rgba(238,243,231,0) 54%, rgba(238,243,231,.03) 78%, rgba(238,243,231,.085) 100%);
+    pointer-events:none; z-index:0;
+  }
+
+  /* The whole composition lives on a centred 1600 × 880 stage.
+     Centred with margins rather than a transform on purpose: a transform would
+     open a stacking context and trap every child below #scene. */
+  .stage{
+    position:absolute; left:50%; top:50%;
+    margin-left:calc(-800 * var(--u));
+    margin-top:calc(-440 * var(--u));
+    width:calc(1600 * var(--u));
+    height:calc(880 * var(--u));
+  }
+
+  /* ── column guides (z 1) ─────────────────────────────────────────────── */
+  .guides{ position:absolute; inset:calc(-40 * var(--u)) 0; z-index:1; pointer-events:none; }
+  .guides i{
+    position:absolute; top:0; bottom:0; width:1px;
+    background:linear-gradient(180deg, rgba(255,255,255,0) 0%, var(--rule) 12%, var(--rule) 78%, rgba(255,255,255,0) 100%);
+  }
+
+  /* ── ghost wordmark (z 1) ────────────────────────────────────────────── */
+  .ghost{
+    position:absolute; z-index:1;
+    left:calc(6 * var(--u)); bottom:calc(-64 * var(--u));
+    font-size:calc(310 * var(--u));
+    line-height:.78;
+    font-weight:400;
+    letter-spacing:calc(30 * var(--u));
+    color:rgba(255,255,255,.055);
+    white-space:nowrap; user-select:none; pointer-events:none;
+  }
+
+  /* ── three.js canvas (z 3 — above card 1, below everything else) ─────── */
+  #scene{
+    position:absolute; inset:0; z-index:3;
+    width:100%; height:100%;
+    pointer-events:none;
+    opacity:0; transition:opacity .7s var(--ease);
+  }
+  .is-ready #scene{ opacity:1; }
+
+  /* ── nav: a floating dock (z 5) ──────────────────────────────────────
+     A centred capsule of pills that magnify as the pointer nears them, over
+     a rim highlight that tracks where the pointer is — the dock idiom from
+     ascii-page-transition, in this page's palette and unit system.
+     The wrapper does the centring so the capsule itself is free to carry the
+     pointer-parallax transform; putting both on one element means whichever
+     is written last wins and the dock jumps out of centre. */
+  .dock-wrap{
+    position:absolute; z-index:5;
+    top:calc(38 * var(--u)); left:0; right:0;
+    display:flex; justify-content:center;
+    pointer-events:none;
+  }
+  .dock{
+    pointer-events:auto;
+    display:flex; align-items:flex-start; gap:calc(3 * var(--u));
+    height:calc(46 * var(--u));
+    padding:calc(5 * var(--u));
+    border-radius:calc(14 * var(--u));
+    border:1px solid rgba(255,255,255,.11);
+    /* No backdrop-filter. It sits over a canvas that repaints every frame,
+       so the backdrop has to be re-sampled and re-blurred every frame too —
+       measured at ~20 fps off the whole page, and the radius made no
+       difference because the cost is the extra pass, not the blur. A
+       translucent panel with a lit top edge reads the same at this size. */
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,0) 42%),
+      rgba(34,40,31,.74);
+    box-shadow:0 calc(8 * var(--u)) calc(22 * var(--u)) rgba(10,14,8,.30),
+               inset 0 1px rgba(255,255,255,.06);
+    isolation:isolate;
+  }
+  /* Anchored at the top so growth runs downward, out of the headline's way —
+     a dock that grew from its centre would push into the nav's own row. */
+  .dock-item{
+    position:relative; z-index:6;
+    display:inline-flex; align-items:center; justify-content:center;
+    flex:none;
+    height:calc(36 * var(--u));
+    gap:calc(8 * var(--u));
+    padding:0 calc(13 * var(--u));
+    transform-origin:50% 0;
+    border:1px solid transparent;
+    border-radius:calc(10 * var(--u));
+    background:rgba(255,255,255,.04);
+    color:var(--ink-faint);
+    text-decoration:none; cursor:pointer;
+    font-family:inherit;
+    font-size:calc(11 * var(--u)); font-weight:500;
+    letter-spacing:calc(1.5 * var(--u)); text-transform:uppercase;
+    white-space:nowrap;
+    will-change:width,height,transform;
+    transition:color .18s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+  }
+  /* A magnified pill hangs below the capsule, so it needs to be its own
+     opaque tile — a translucent white wash at that size reads as a milky
+     rectangle stuck to the bar rather than as a key lifting off it. */
+  .dock-item[data-near="true"]{
+    z-index:7;
+    color:var(--ink);
+    border-color:rgba(255,255,255,.19);
+    background:rgba(31,37,28,.94);
+    box-shadow:0 calc(7 * var(--u)) calc(16 * var(--u)) rgba(10,14,8,.30);
+  }
+  .dock-item .glyph{
+    width:calc(14 * var(--u)); height:calc(14 * var(--u)); flex:none;
+    opacity:.66; transition:opacity .18s var(--ease);
+  }
+  .dock-item .glyph svg{
+    display:block; width:100%; height:100%;
+    fill:none; stroke:currentColor; stroke-width:1.25;
+    stroke-linecap:round; stroke-linejoin:round;
+  }
+  .dock-item[data-near="true"] .glyph{ opacity:1; }
+
+  /* the mark is the dock's anchor: a solid pale tile, the one opaque thing
+     in a bar made of glass */
+  .dock-mark{
+    width:calc(36 * var(--u)); padding:0;
+    background:#eef1e7; border-color:#eef1e7; color:#23261f;
+    overflow:hidden;
+  }
+  .dock-mark svg{ width:58%; height:58%; display:block; fill:currentColor; }
+  /* the near state paints .dock-item white, which on the pale mark tile
+     would be a white glyph on a white ground */
+  .dock-mark[data-near="true"]{ background:#fff; border-color:#fff; color:#1b1e18; }
+
+  /* the current section wears the cards' paper, so the nav and the cards
+     read as the same material */
+  .dock-item.is-active{
+    background:var(--card); border-color:var(--card); color:var(--card-ink);
+    box-shadow:0 calc(6 * var(--u)) calc(16 * var(--u)) rgba(12,17,9,.24);
+  }
+  .dock-item.is-active .glyph{ opacity:.8; }
+  .dock-item--enter{ color:var(--ink); background:rgba(255,255,255,.075); }
+
+  /* ── specular rim ────────────────────────────────────────────────────
+     A conic gradient masked down to the border, whose start angle points at
+     the pointer and whose opacity falls off with distance. It is the reason
+     the glass reads as a lit edge rather than as a flat translucent box. */
+  [data-spec]{ --spec-angle:2.4rad; --spec-bright:0; }
+  [data-spec]::after{
+    content:''; position:absolute; inset:-1px; z-index:5;
+    padding:1px; border-radius:inherit; pointer-events:none;
+    opacity:var(--spec-bright);
+    background:conic-gradient(from var(--spec-angle) at 50% 50%,
+      rgba(240,246,232,0) 0deg, rgba(240,246,232,.08) 14deg, rgba(240,246,232,.95) 28deg,
+      rgba(240,246,232,.16) 46deg, rgba(240,246,232,0) 68deg, rgba(240,246,232,0) 180deg,
+      rgba(240,246,232,.08) 194deg, rgba(240,246,232,.95) 208deg, rgba(240,246,232,.16) 226deg,
+      rgba(240,246,232,0) 248deg, rgba(240,246,232,0) 360deg);
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+  }
+  .dock{ position:relative; }
+
+  /* ── hero copy (z 4) ─────────────────────────────────────────────────── */
+  .headline{
+    position:absolute; z-index:4;
+    left:calc(46 * var(--u)); top:calc(202 * var(--u));
+    font-size:calc(63 * var(--u)); line-height:calc(65 * var(--u));
+    font-weight:300; letter-spacing:calc(-0.4 * var(--u));
+    color:var(--ink);
+  }
+  /* No overflow clip: cropping a 63u face to wipe it in cuts the descenders
+     of "Step" and "living" at the moment they land. The padding stays even
+     though the clip is gone — it set the two lines' metrics, and removing it
+     would shift line two. */
+  .headline span{ display:block; padding-bottom:.04em; }
+  .headline span i{ display:inline-block; font-style:normal; }
+
+  .lede{
+    position:absolute; z-index:4;
+    left:calc(520 * var(--u)); top:calc(196 * var(--u));
+    width:calc(208 * var(--u));
+    font-size:calc(16.5 * var(--u)); line-height:calc(22 * var(--u));
+    font-weight:300; color:var(--ink-soft);
+  }
+
+  /* ── liquid-metal controls ──────────────────────────────────────────
+     The original five-pass WebGL2 renderer now mounts directly in this
+     document. Its canvas, sizing, glass plate, shader constants and input
+     model are unchanged; only the iframe boundary has been removed. */
+  .pill-clip{
+    position:absolute; z-index:4;
+    left:calc(644 * var(--u)); top:calc(360 * var(--u));
+    width:calc(410 * var(--u)); height:calc(270 * var(--u));
+    margin:calc(-135 * var(--u)) 0 0 calc(-205 * var(--u));
+    clip-path:inset(calc(72 * var(--u)) calc(60 * var(--u))
+                    calc(26 * var(--u)) calc(60 * var(--u)) round calc(62 * var(--u)));
+  }
+  .pill{
+    position:absolute; inset:0; --mr:calc(150 * var(--u));
+    display:grid; place-items:center;
+  }
+
+  .liquid-stage{
+    --lu:calc(var(--h) / 516);
+    --bh:var(--h);
+    --pad:calc(900 * var(--lu));
+    position:relative;
+    width:max-content; height:max-content;
+    padding:var(--pad);
+    display:grid; place-items:center;
+    touch-action:manipulation;
+    font-family:'Lexend','Inter',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
+    font-optical-sizing:auto;
+    -webkit-font-smoothing:antialiased;
+  }
+  .liquid-stage--explore{ --h:calc(60.156 * var(--u)); }
+  .liquid-stage--play{ --h:calc(88.2288 * var(--u)); }
+
+  .liquid-plate{
+    position:absolute;
+    inset:var(--pad);
+    border-radius:999px;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.085), rgba(255,255,255,.014) 44%, rgba(255,255,255,0) 64%),
+      rgba(10,12,10,.42);
+    box-shadow:
+      0 calc(var(--h) * 0.08) calc(var(--h) * 0.18) rgba(0,0,0,.38),
+      0 calc(var(--h) * 0.24) calc(var(--h) * 0.50) rgba(0,0,0,.28),
+      0 calc(var(--h) * 0.48) calc(var(--h) * 0.96) rgba(0,0,0,.16),
+      inset 0 1px 0 rgba(255,255,255,.13),
+      inset 0 calc(var(--h) * -0.02) calc(var(--h) * 0.05) rgba(255,255,255,.05);
+    transition:box-shadow .38s cubic-bezier(.22,.61,.36,1),
+               background .38s cubic-bezier(.22,.61,.36,1);
+  }
+  .liquid-stage.hot .liquid-plate{
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.105), rgba(255,255,255,.02) 44%, rgba(255,255,255,0) 64%),
+      rgba(8,10,8,.50);
+    box-shadow:
+      0 calc(var(--h) * 0.10) calc(var(--h) * 0.22) rgba(0,0,0,.44),
+      0 calc(var(--h) * 0.32) calc(var(--h) * 0.66) rgba(0,0,0,.34),
+      0 calc(var(--h) * 0.66) calc(var(--h) * 1.32) rgba(0,0,0,.20),
+      inset 0 1px 0 rgba(255,255,255,.17),
+      inset 0 calc(var(--h) * -0.02) calc(var(--h) * 0.05) rgba(255,255,255,.06);
+  }
+  .liquid-fx{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+
+  .liquid-button{
+    position:relative;
+    height:var(--bh);
+    border:0; background:none;
+    border-radius:999px;
+    display:flex; align-items:center; justify-content:center;
+    color:#fff;
+    font-family:inherit; font-weight:500; line-height:1; letter-spacing:0;
+    cursor:pointer; -webkit-tap-highlight-color:transparent; outline:none;
+  }
+  .liquid-button:focus-visible{
+    outline:calc(4 * var(--lu)) solid rgba(255,255,255,.55);
+    outline-offset:calc(10 * var(--lu));
+  }
+  .liquid-button .ico{ display:block; flex:none; overflow:visible; }
+  .liquid-button .lbl{ display:block; transform:translateY(calc(2 * var(--lu))); }
+  .liquid-button--explore{
+    padding:0 calc(224 * var(--lu)) 0 calc(95 * var(--lu));
+    gap:calc(112 * var(--lu));
+    font-size:calc(140 * var(--lu));
+  }
+  .liquid-button--explore .ico{
+    width:calc(150 * var(--lu)); height:calc(150 * var(--lu));
+  }
+  .liquid-button--play{
+    width:var(--bh); height:var(--bh); padding:0;
+  }
+  .liquid-button--play .ico{
+    width:calc(176 * var(--lu)); height:calc(176 * var(--lu));
+    margin-left:calc(14 * var(--lu));
+  }
+  .liquid-button--play .lbl{ display:none; }
+  .liquid-stage.press .liquid-plate{
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.01) 44%, rgba(255,255,255,0) 64%),
+      rgba(7,9,7,.55);
+    box-shadow:
+      0 calc(var(--h) * 0.04) calc(var(--h) * 0.11) rgba(0,0,0,.46),
+      0 calc(var(--h) * 0.13) calc(var(--h) * 0.32) rgba(0,0,0,.36),
+      0 calc(var(--h) * 0.27) calc(var(--h) * 0.62) rgba(0,0,0,.22),
+      inset 0 1px 0 rgba(255,255,255,.10);
+    transition-duration:.10s;
+  }
+
+  /* ── play button (z 4) ─────────────────────────────────────────────── */
+  .play-wrap{
+    position:absolute; z-index:4; pointer-events:none;
+    left:calc(187 * var(--u)); top:calc(431 * var(--u));
+    width:calc(170 * var(--u)); height:calc(170 * var(--u));
+  }
+  .play-wrap > *{ pointer-events:auto; }
+  .play-clip{
+    position:absolute; left:50%; top:50%;
+    width:calc(396 * var(--u)); height:calc(396 * var(--u));
+    margin:calc(-198 * var(--u)) 0 0 calc(-198 * var(--u));
+    clip-path:inset(calc(131 * var(--u)) calc(106 * var(--u))
+                    calc(73 * var(--u)) calc(106 * var(--u)) round calc(92 * var(--u)));
+  }
+  .play-glass{ position:absolute; inset:0; display:grid; place-items:center; }
+  .play-ring{
+    position:absolute; inset:0; pointer-events:none;
+    border:1px solid rgba(255,255,255,.17); border-radius:50%;
+  }
+  .play-ring::after{
+    content:''; position:absolute; inset:calc(-1 * var(--u));
+    border:1px solid rgba(255,255,255,.32); border-radius:50%;
+    opacity:0; transform:scale(.86);
+    transition:opacity .7s var(--ease), transform .9s var(--ease-out);
+  }
+  .play-clip:hover ~ .play-ring::after,
+  .play-clip:focus-within ~ .play-ring::after{ opacity:1; transform:scale(1.06); }
+
+  /* ── stats (z 4) ─────────────────────────────────────────────────────── */
+  .stat{ position:absolute; z-index:4; display:flex; align-items:flex-start; gap:calc(9 * var(--u)); }
+  .stat--a{ left:calc(1250 * var(--u)); top:calc(216 * var(--u)); }
+  .stat--b{ left:calc(1346 * var(--u)); top:calc(326 * var(--u)); }
+  .stat .mark{ width:calc(32 * var(--u)); height:calc(32 * var(--u)); flex:none; margin-top:calc(2 * var(--u)); color:rgba(255,255,255,.34); }
+  .stat .mark svg{ width:100%; height:100%; display:block; }
+  .stat dt{ font-size:calc(13.5 * var(--u)); font-weight:300; color:var(--ink-soft); line-height:calc(19 * var(--u)); }
+  .stat dt, .stat dd{ text-shadow:0 calc(2 * var(--u)) calc(16 * var(--u)) rgba(10,14,8,.6); }
+  .stat .mark svg{ filter:drop-shadow(0 calc(2 * var(--u)) calc(10 * var(--u)) rgba(10,14,8,.6)); }
+  .stat dd{ font-size:calc(13.5 * var(--u)); font-weight:600; color:var(--ink); line-height:calc(21 * var(--u)); }
+
+  /* ── cards ───────────────────────────────────────────────────────────── */
+  .card{
+    position:absolute;
+    background:var(--card); border-radius:calc(46 * var(--u));
+    box-shadow:0 calc(30 * var(--u)) calc(70 * var(--u)) rgba(16,21,13,.30);
+    transition:box-shadow .8s var(--ease);
+  }
+  /* No z-index here on purpose. z-index:auto keeps the card out of its own
+     stacking context, so the body paints under #scene (the moss drapes over
+     its shoulder) while .knob, at z 4, still sits in front of the moss. */
+  .card--about{
+    left:calc(890 * var(--u)); top:calc(200 * var(--u));
+    width:calc(330 * var(--u)); height:calc(305 * var(--u));
+  }
+  .card--stove{
+    z-index:4; will-change:transform;
+    left:calc(1237 * var(--u)); top:calc(482 * var(--u));
+    width:calc(328 * var(--u)); height:calc(310 * var(--u));
+  }
+  .card .label{
+    position:absolute; left:calc(38 * var(--u));
+    font-size:calc(15.5 * var(--u)); font-weight:300; color:var(--card-label);
+  }
+  .card h2{
+    position:absolute; left:calc(38 * var(--u));
+    font-size:calc(26.2 * var(--u)); line-height:calc(27 * var(--u));
+    font-weight:400; letter-spacing:calc(-0.5 * var(--u)); color:var(--card-ink);
+  }
+  .card--about .label{ top:calc(152 * var(--u)); }
+  .card--about h2{ top:calc(177 * var(--u)); width:calc(142 * var(--u)); }
+  .card--stove .label{ top:calc(45 * var(--u)); }
+  .card--stove h2{ top:calc(70 * var(--u)); }
+  /* Both cards carry a plate. The Field Note reads downward — label, title,
+     then the photograph — so its window sits at the foot of the card; the
+     Ethos card reads the other way up, so its window is at the head and the
+     copy sits under it. Same frame, mirrored. */
+  .card figure{
+    position:absolute; left:calc(14 * var(--u)); right:calc(14 * var(--u));
+    border-radius:calc(34 * var(--u)); overflow:hidden;
+    isolation:isolate; background:#263025;
+  }
+  .card--stove figure{ bottom:calc(14 * var(--u)); height:calc(158 * var(--u)); }
+  .card--about figure{ top:calc(14 * var(--u)); height:calc(122 * var(--u)); }
+  /* The plate is its own depth plane. It travels against the card and the
+     moss, so the landscape feels like a small window rather than a
+     photograph glued to the surface. */
+  .portal-media{
+    position:absolute; inset:calc(-9 * var(--u)); z-index:1; display:block;
+    will-change:transform,clip-path;
+    transform:
+      perspective(900px)
+      translate3d(calc(var(--px,0) * -11px),calc(var(--py,0) * -7px),0)
+      rotateY(calc(var(--px,0) * -1.4deg))
+      rotateX(calc(var(--py,0) * .9deg));
+    transform-origin:50% 50%;
+  }
+  .portal-media img{
+    width:100%; height:100%; object-fit:cover; display:block;
+    transform:scale(1.08);
+    filter:saturate(.92) contrast(1.03);
+    transition:transform 1.25s var(--ease-out),filter .8s var(--ease);
+  }
+  .card:hover .portal-media img{ transform:scale(1.13); filter:saturate(1.04) contrast(1.04); }
+  .pixel-reveal{
+    position:absolute; inset:0; z-index:3; width:100%; height:100%;
+    pointer-events:none; opacity:0; mix-blend-mode:screen;
+  }
+  /* The white scan rides the clip edge, so its centre has to travel the
+     media element's box, not the figure's — .portal-media is overscanned by
+     9u on every side to give the parallax rotation somewhere to go. Offsetting
+     by that 9u in calc() rather than by a translate percentage keeps the
+     glow on the edge at every breakpoint, whatever size the plate is. */
+  .card figure::after{
+    content:''; position:absolute; z-index:2;
+    filter:blur(calc(2 * var(--u))); opacity:0; pointer-events:none;
+    top:0; bottom:0; width:26%; left:calc(-13% - 9 * var(--u));
+    background:linear-gradient(90deg,transparent,rgba(229,244,209,.2) 42%,rgba(252,255,246,.72) 54%,transparent);
+  }
+
+  .knob-float{
+    position:absolute; z-index:4; pointer-events:none;
+    left:calc(1142 * var(--u)); top:calc(427 * var(--u));
+    width:calc(58 * var(--u)); height:calc(58 * var(--u));
+  }
+  .knob-float > *{ pointer-events:auto; }
+  .knob--about{ left:0; top:0; }
+  .card .knob, .knob--about{
+    position:absolute; z-index:4; right:calc(20 * var(--u)); bottom:calc(20 * var(--u));
+    width:calc(58 * var(--u)); height:calc(58 * var(--u));
+    border:0; border-radius:50%; cursor:pointer;
+    background:#fbfcf8; display:grid; place-items:center;
+    box-shadow:0 calc(6 * var(--u)) calc(16 * var(--u)) rgba(16,21,13,.18);
+    transition:transform .5s var(--ease-out), background .4s var(--ease);
+  }
+  .knob--about{ right:auto; bottom:auto; width:calc(58 * var(--u)); height:calc(58 * var(--u)); }
+  .card--stove .knob{ width:calc(54 * var(--u)); height:calc(54 * var(--u)); right:calc(26 * var(--u)); bottom:calc(26 * var(--u)); }
+  .card .knob svg, .knob--about svg{ width:calc(19 * var(--u)); height:calc(19 * var(--u)); display:block; color:#3f453a; }
+  .card .knob:hover, .knob--about:hover{ transform:scale(1.1) rotate(8deg); background:#fff; }
+  .card:hover{ box-shadow:0 calc(38 * var(--u)) calc(84 * var(--u)) rgba(16,21,13,.36); }
+
+  /* ── scroll cue (z 4) ────────────────────────────────────────────────── */
+  .scroll{
+    position:absolute; z-index:4;
+    left:calc(846 * var(--u)); top:calc(690 * var(--u));
+    display:flex; align-items:center; gap:calc(12 * var(--u));
+    writing-mode:vertical-rl;
+    font-size:calc(11 * var(--u)); font-weight:400;
+    letter-spacing:calc(4.4 * var(--u));
+    color:rgba(255,255,255,.5);
+    text-transform:uppercase; text-decoration:none;
+  }
+  .scroll .track{ position:relative; width:1px; height:calc(56 * var(--u)); background:rgba(255,255,255,.18); overflow:hidden; }
+  .scroll .track::after{
+    content:''; position:absolute; inset:0 0 auto; height:40%;
+    background:rgba(255,255,255,.75);
+    animation:trickle 2.6s var(--ease) infinite;
+  }
+  @keyframes trickle{
+    0%   { transform:translateY(-105%); opacity:0; }
+    22%  { opacity:1; }
+    78%  { opacity:1; }
+    100% { transform:translateY(255%); opacity:0; }
+  }
+
+  /* ── entrance: everything is wiped in behind a mask ───────────────────
+     Transform is reserved for the pointer parallax, so the reveal is done
+     with clip-path. Once the intro has run, .intro-done drops the clip
+     entirely — a live clip-path would open a stacking context on the About
+     card and trap its knob under the moss. */
+  .js .mask{ clip-path:inset(100% 0 0 0 round var(--mr,0px)); }
+  .is-ready .mask{
+    clip-path:inset(0 0 0 0 round var(--mr,0px));
+    transition:clip-path 1.05s var(--ease-out) var(--d,0ms);
+  }
+  .js .mask-circle{ clip-path:circle(0% at 50% 50%); }
+  .is-ready .mask-circle{
+    clip-path:circle(76% at 50% 50%);
+    transition:clip-path 1.1s var(--ease-out) var(--d,0ms);
+  }
+  .js .fade{ opacity:0; }
+  .is-ready .fade{ opacity:1; transition:opacity 1.3s var(--ease) var(--d,0ms); }
+
+  .intro-done .mask, .intro-done .mask-circle{ clip-path:none; transition:none; }
+
+  .card{ --mr:calc(46 * var(--u)); }
+
+  /* the dock drops in tile by tile; the capsule itself only fades, because
+     a clip on it would cut the pills off as they magnify past its edge */
+  .js .dock{ opacity:0; }
+  .is-ready .dock{ opacity:1; transition:opacity .8s var(--ease) 80ms; }
+  .js .dock-item{ clip-path:inset(0 0 105% 0); }
+  .is-ready .dock-item{
+    clip-path:inset(0 0 -30% 0);
+    transition:clip-path .9s var(--ease-out) var(--d,0ms),
+               color .18s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+  }
+  .intro-done .dock-item{ clip-path:none; }
+
+  /* A short rise under a fade rather than a full-height wipe: with nothing
+     cropping it, a 105% travel would start line one sitting on top of line
+     two. .headline itself carries the pointer parallax, so the transform has
+     to go on the inner <i>. */
+  .js .headline span i{ opacity:0; transform:translateY(calc(16 * var(--u))); }
+  .is-ready .headline span i{
+    opacity:1; transform:none;
+    transition:opacity 1.05s var(--ease) var(--d,0ms),
+               transform 1.25s var(--ease-out) var(--d,0ms);
+  }
+
+  /* Each plate resolves like a low-bandwidth botanical transmission: a
+     stepped clip exposes the photograph while sampled pixel-dots gather along
+     the advancing edge (the dots themselves are painted by canvas).
+     Both plates scan across, the Ethos one a beat ahead of the Field Note. */
+  .js .portal-media{ clip-path:inset(0 100% 0 0 round calc(25 * var(--u))); }
+  .is-ready .card--about .portal-media{ animation:portal-cut 1.45s steps(12,end) .92s both; }
+  .is-ready .card--stove .portal-media{ animation:portal-cut 1.45s steps(12,end) 1.08s both; }
+  .is-ready .card--about figure::after{ animation:portal-scan 1.45s steps(12,end) .92s both; }
+  .is-ready .card--stove figure::after{ animation:portal-scan 1.45s steps(12,end) 1.08s both; }
+  .intro-done .portal-media{ clip-path:none; animation:none; }
+  @keyframes portal-cut{
+    from{ clip-path:inset(0 100% 0 0 round calc(25 * var(--u))); }
+    to{ clip-path:inset(0 0 0 0 round calc(25 * var(--u))); }
+  }
+  /* The glow travels by animating its own offset, not by a translate
+     percentage. A translate is a percentage of the glow's width, so the
+     distance it covers depends on the plate's proportions — it overshot by
+     a quarter of the card here and rode ahead of the edge the whole way.
+     In calc() the travel is exactly the media box: 100% of the plate plus
+     the 9u of overscan at each end, at every breakpoint. */
+  @keyframes portal-scan{
+    0%{ left:calc(-13% - 9 * var(--u)); opacity:0; }
+    10%{ opacity:.75; }
+    88%{ opacity:.55; }
+    100%{ left:calc(87% + 9 * var(--u)); opacity:0; }
+  }
+
+  /* No clip on the canvas: the root draws itself in behind the survey pulse,
+     and a CSS wipe on top of that would be two reveals fighting each other.
+     The fade is only here to cover the first compiled frame. */
+  .is-ready #scene{ transition:opacity .45s var(--ease); }
+
+  /* ── pointer parallax ────────────────────────────────────────────────
+     --px / --py are written on .hero once per frame (-1…1). Each layer
+     declares how far it rides (--pd, px at full deflection) and how much
+     it turns (--pr, degrees), which is what gives the plane its depth. */
+  .par{
+    transform:
+      perspective(1400px)
+      translate3d(calc(var(--px,0) * var(--pd,0) * -1px),
+                  calc(var(--py,0) * var(--pd,0) * -0.62px),
+                  0)
+      rotateY(calc(var(--px,0) * var(--pr,0) * 1deg))
+      rotateX(calc(var(--py,0) * var(--pr,0) * -0.7deg));
+  }
+  /* the floating knob turns about the About card's centre, not its own,
+     so it stays glued to the corner it belongs to */
+  .knob-float{ transform-origin:calc(-87 * var(--u)) calc(-74.5 * var(--u)); }
+  .card--about{ transform-origin:50% 50%; }
+
+  /* ── keyboard focus ──────────────────────────────────────────────────── */
+  a:focus-visible, button:focus-visible{
+    outline:2px solid rgba(255,255,255,.85);
+    outline-offset:calc(4 * var(--u));
+    border-radius:calc(6 * var(--u));
+  }
+  .card .knob:focus-visible, .knob--about:focus-visible, .play:focus-visible{ outline-color:rgba(28,34,22,.9); }
+
+  @media (prefers-reduced-motion:reduce){
+    .mask,.mask-circle,.fade,#scene,
+    .dock,.dock-item,
+    .headline span i{ opacity:1 !important; clip-path:none !important; transform:none !important; transition:none !important; }
+    .par{ transform:none !important; }
+    .portal-media{ clip-path:none !important; animation:none !important; transform:none !important; }
+    .pixel-reveal,.card figure::after{ display:none !important; }
+    .portal-media img{ transform:none !important; transition:none !important; }
+    .scroll .track::after{ animation:none; }
+    #scene{ transition:none; }
+  }
+
+  /* ── narrow screens: one column, the moss becomes a band between the
+        copy and the cards (760 design units wide) ───────────────────────── */
+  @media (max-width:900px){
+    :root{ --u: calc(100vw / 760); }
+    .hero{ height:auto; min-height:100svh; }
+    .stage{
+      position:relative; left:auto; top:auto; margin:0;
+      width:100%; height:calc(1625 * var(--u));
+    }
+    .hero::after{
+      background:
+        radial-gradient(90% 30% at 50% 74%, rgba(238,243,231,.40) 0%, rgba(238,243,231,.14) 46%, rgba(238,243,231,0) 82%),
+        linear-gradient(180deg, rgba(238,243,231,0) 62%, rgba(238,243,231,.05) 100%);
+    }
+    .guides i:nth-child(3){ display:none; }
+    .guides i:nth-child(1){ left:calc(253 * var(--u)) !important; }
+    .guides i:nth-child(2){ left:calc(506 * var(--u)) !important; }
+
+    /* one column: the labels come off and the dock keeps only its glyphs,
+       because at this scale the type would be four pixels tall */
+    /* Floored with max(), not left on the design unit alone: this breakpoint
+       runs from 900px down to 320px, so a pure --u dock is a 24px bar with
+       12px targets on a phone. The floor only bites at the small end. */
+    .dock-wrap{ top:calc(30 * var(--u)); }
+    .dock{
+      height:max(56px, calc(58 * var(--u)));
+      padding:max(6px, calc(6 * var(--u)));
+      gap:max(4px, calc(4 * var(--u)));
+      border-radius:max(17px, calc(18 * var(--u)));
+    }
+    .dock-item{
+      height:max(44px, calc(46 * var(--u)));
+      width:max(44px, calc(46 * var(--u)));
+      padding:0; border-radius:max(12px, calc(13 * var(--u)));
+    }
+    .dock-item span:not(.glyph){ display:none; }
+    .dock-item .glyph{ width:max(19px, calc(20 * var(--u))); height:max(19px, calc(20 * var(--u))); }
+    .dock-mark svg{ width:52%; height:52%; }
+    .knob-float{ left:calc(644 * var(--u)); top:calc(1218 * var(--u)); transform-origin:calc(-264 * var(--u)) calc(-43 * var(--u)); }
+    .headline{ left:calc(34 * var(--u)); top:calc(128 * var(--u)); font-size:calc(62 * var(--u)); line-height:calc(66 * var(--u)); }
+    .lede{ left:calc(34 * var(--u)); top:calc(288 * var(--u)); width:calc(400 * var(--u)); font-size:calc(19 * var(--u)); line-height:calc(27 * var(--u)); }
+    /* one column: the frame keeps its aspect, re-anchored to the left rail */
+    .pill-clip{
+      left:calc(34 * var(--u)); top:calc(430 * var(--u));
+      width:calc(506 * var(--u)); height:calc(334 * var(--u));
+      margin:calc(-167 * var(--u)) 0 0 calc(-79 * var(--u));
+      clip-path:inset(calc(93 * var(--u)) calc(74 * var(--u)) calc(1 * var(--u)) calc(74 * var(--u)) round calc(76 * var(--u)));
+    }
+    .liquid-stage--explore{ --h:calc(74.4152 * var(--u)); }
+    .play-wrap{ display:none; }
+
+    .stat{ gap:calc(11 * var(--u)); }
+    .stat .mark{ width:calc(36 * var(--u)); height:calc(36 * var(--u)); }
+    .stat dt{ font-size:calc(16 * var(--u)); line-height:calc(22 * var(--u)); }
+    .stat dd{ font-size:calc(16.5 * var(--u)); line-height:calc(24 * var(--u)); }
+    .stat--a{ left:calc(34 * var(--u));  top:calc(540 * var(--u)); }
+    .stat--b{ left:calc(396 * var(--u)); top:calc(540 * var(--u)); }
+
+    .card{ border-radius:calc(40 * var(--u)); }
+    .card--about{ left:calc(34 * var(--u)); top:calc(1050 * var(--u)); width:calc(692 * var(--u)); height:calc(250 * var(--u)); }
+    .card--about .label{ top:calc(96 * var(--u)); }
+    .card--about h2{ top:calc(124 * var(--u)); width:calc(400 * var(--u)); font-size:calc(32 * var(--u)); line-height:calc(36 * var(--u)); }
+    .card--stove{ left:calc(34 * var(--u)); top:calc(1324 * var(--u)); width:calc(692 * var(--u)); height:calc(268 * var(--u)); }
+    .card--stove h2{ font-size:calc(32 * var(--u)); }
+    /* one column: both plates become a thumbnail on the card's outer edge,
+       the Ethos one still anchored to the top */
+    .card--stove figure{ left:auto; right:calc(16 * var(--u)); bottom:calc(16 * var(--u)); width:calc(300 * var(--u)); height:calc(150 * var(--u)); }
+    .card--about figure{ left:auto; right:calc(16 * var(--u)); top:calc(16 * var(--u)); width:calc(224 * var(--u)); height:calc(218 * var(--u)); }
+    .card .knob{ right:calc(24 * var(--u)); bottom:calc(24 * var(--u)); }
+    .card--stove .knob{ right:calc(30 * var(--u)); bottom:calc(30 * var(--u)); }
+
+    .scroll{ left:calc(702 * var(--u)); top:calc(470 * var(--u)); }
+    .ghost{ font-size:calc(184 * var(--u)); letter-spacing:calc(14 * var(--u)); bottom:calc(660 * var(--u)); left:calc(-10 * var(--u)); }
+  }
+</style>
+<link rel="stylesheet" href="renewal.css?v=3">
+<link rel="stylesheet" href="polish.css?v=1">
+<link rel="alternate" hreflang="zh-CN" href="zh.html"><link rel="alternate" hreflang="en" href="index.html">
+<link rel="stylesheet" href="cursor-build.css?v=1">
+</head>
+<body>
+
+<nav class="cc-language" aria-label="语言 / Language"><a href="zh.html" lang="zh-CN" hreflang="zh-CN" aria-current="page">中文</a><span>/</span><a href="index.html" lang="en" hreflang="en">EN</a></nav>
+<main class="hero" id="hero">
+  <picture class="cc-scene-still" aria-hidden="true"><source media="(max-width:900px)" srcset="inner-green-assets/scene-mobile.webp"><img src="inner-green-assets/scene-desktop.webp" alt="" fetchpriority="high" decoding="async"></picture><canvas id="scene" aria-hidden="true"></canvas>
+
+  <div class="dock-wrap">
+    <nav class="dock par-dock" style="--pd:5" data-spec aria-label="Primary">
+      <a class="dock-item dock-mark" data-dock data-spec data-burst href="#" style="--d:120ms" aria-label="璀粲首页"><span class="cc-symbol">璀</span>
+      </a>
+      <a class="dock-item is-active" data-dock data-spec data-burst href="#" style="--d:180ms">
+        <span class="glyph" aria-hidden="true">
+          <svg viewBox="0 0 16 16"><path d="M8 14V9"/><path d="M8 9c0-2.4 1.7-4.3 4-4.3.2 2.6-1.6 4.6-4 4.3Z"/><path d="M8 10.5C7.9 8.4 6.4 6.8 4.4 6.8 4.3 8.9 5.9 10.6 8 10.5Z"/></svg>
+        </span>
+        <span>璀粲</span>
+      </a>
+      <a class="dock-item" data-dock data-spec data-burst href="#" style="--d:230ms">
+        <span class="glyph" aria-hidden="true">
+          <svg viewBox="0 0 16 16"><path d="M1.6 12.4c2.4-3.4 4.3-5.1 5.7-5.1 2 0 3 3.6 5 3.6 1.1 0 1.9-.5 2.4-1.4"/><path d="M4.3 6.2C5.5 4.4 6.6 3.5 7.6 3.5c1.5 0 2.2 2.4 3.7 2.4"/></svg>
+        </span>
+        <span>业务</span>
+      </a>
+      <a class="dock-item" data-dock data-spec data-burst href="#" style="--d:280ms">
+        <span class="glyph" aria-hidden="true">
+          <svg viewBox="0 0 16 16"><path d="M4 2.4h5.3L12 5.1v8.5H4z"/><path d="M9.2 2.4V5h2.7"/><path d="M6 8.4h4M6 10.8h2.8"/></svg>
+        </span>
+        <span>关于</span>
+      </a>
+      <a class="dock-item dock-item--enter" data-dock data-spec data-burst href="#" style="--d:330ms">
+        <span class="glyph" aria-hidden="true">
+          <svg viewBox="0 0 16 16"><path d="M6.6 2.5h5.1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6.6"/><path d="M2.6 8h6.6"/><path d="m7 5.6 2.4 2.4L7 10.4"/></svg>
+        </span>
+        <span>联系</span>
+      </a>
+    </nav>
+  </div>
+
+  <div class="stage" id="stage">
+
+    <div class="guides fade" style="--d:900ms" aria-hidden="true">
+      <i style="left:calc(405 * var(--u))"></i>
+      <i style="left:calc(748 * var(--u))"></i>
+      <i style="left:calc(1091 * var(--u))"></i>
+    </div>
+
+    <div class="ghost fade" style="--d:1150ms" aria-hidden="true">CUICAN</div>
+
+    <!-- card 1 sits *behind* the canvas so the moss drapes over its shoulder -->
+    <article class="card card--about mask" style="--d:760ms; --pd:10; --pr:2.2">
+      <figure class="portal" data-delay="920">
+        <span class="portal-media"><img src="inner-green-assets/card-ethos.jpg" alt="A cushion of moss grown over lichen-crusted stones" loading="eager" decoding="async"></span>
+        <canvas class="pixel-reveal" aria-hidden="true"></canvas>
+      </figure>
+      <p class="label">AI 创意广告</p>
+      <h2>让创意，<br>成为广告。</h2>
+    </article>
+
+    <!-- the About knob rides *outside* the card: the card has to stay a plain
+         painted box under #scene, so anything that must sit in front of the
+         moss lives here instead, sharing the card's parallax origin -->
+    <span class="knob-float" style="--pd:10; --pr:2.2">
+      <button class="knob knob--about mask-circle" style="--d:1100ms" aria-label="了解 AI 创意广告制作">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 21v-7"/><path d="M12 14c0-3.3 2.4-6 5.5-6 .3 3.6-2.2 6.4-5.5 6Z"/>
+          <path d="M12 16c-.1-2.9-2.2-5.2-4.9-5.2C6.8 13.7 9 16 12 16Z"/>
+        </svg>
+      </button>
+    </span>
+
+    <h1 class="headline" style="--pd:18; --pr:1.2">
+      <span><i style="--d:260ms">让创意发生</i></span>
+      <span><i style="--d:360ms">让品牌被记住</i></span>
+    </h1>
+
+    <p class="lede mask" style="--d:480ms; --pd:14; --pr:1">AI 生产线 · 创意广告制作<br>从一个好想法，到一支有表达的广告。</p>
+
+    <a class="cc-hero-cta" href="#services">探索创意服务<span aria-hidden="true">↗</span></a>
+    <div class="pill-clip">
+      <div class="pill mask" style="--d:600ms; --pd:15; --pr:1.4">
+        <div class="liquid-stage liquid-stage--explore" data-liquid-metal="explore">
+          <div class="liquid-plate plate" aria-hidden="true"></div>
+          <canvas class="liquid-fx" aria-hidden="true"></canvas>
+          <button class="liquid-button liquid-button--explore btn" type="button">
+            <svg class="ico" viewBox="0 0 115 115" aria-hidden="true">
+              <g stroke="currentColor" stroke-width="11" stroke-linecap="round">
+                <path d="M14 34.5 H101"/>
+                <path d="M14 57.5 H101"/>
+                <path d="M14 80.5 H68"/>
+              </g>
+            </svg>
+            <span class="lbl">探索我们的业务</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <span class="play-wrap" style="--pd:20">
+      <span class="play-clip">
+        <span class="play-glass mask-circle" style="--d:900ms">
+          <span class="liquid-stage liquid-stage--play" data-liquid-metal="play">
+            <span class="liquid-plate plate" aria-hidden="true"></span>
+            <canvas class="liquid-fx" aria-hidden="true"></canvas>
+            <button class="liquid-button liquid-button--play btn" type="button" aria-label="了解广告内容延展">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 5.2v13.6L19 12z" fill="currentColor"/>
+              </svg>
+            </button>
+          </span>
+        </span>
+      </span>
+      <span class="play-ring mask-circle" style="--d:840ms" aria-hidden="true"></span>
+    </span>
+
+    <dl class="stat stat--a mask" style="--d:700ms; --pd:12">
+      <span class="mark" aria-hidden="true">
+        <svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+          <circle cx="15" cy="15" r="10.5" stroke-dasharray="0.6 3.6"/>
+          <circle cx="15" cy="15" r="5.6" stroke-dasharray="0.6 3.2"/>
+          <circle cx="15" cy="15" r="1.1" fill="currentColor" stroke="none"/>
+        </svg>
+      </span>
+      <div><dt>创意驱动</dt><dd>从品牌出发</dd></div>
+    </dl>
+
+    <dl class="stat stat--b mask" style="--d:770ms; --pd:13">
+      <span class="mark" aria-hidden="true">
+        <svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+          <g id="rays">
+            <path d="M15 3.5v5"/><path d="M15 21.5v5"/><path d="M3.5 15h5"/><path d="M21.5 15h5"/>
+            <path d="M6.9 6.9l3.5 3.5"/><path d="M19.6 19.6l3.5 3.5"/><path d="M23.1 6.9l-3.5 3.5"/><path d="M10.4 19.6l-3.5 3.5"/>
+          </g>
+          <circle cx="15" cy="15" r="3.6"/>
+        </svg>
+      </span>
+      <div><dt>AI 生产线</dt><dd>让创意落地</dd></div>
+    </dl>
+
+    <article class="card card--stove mask" style="--d:880ms; --pd:22; --pr:2.4">
+      <p class="label">品牌内容</p>
+      <h2>让品牌，有自己的表达。</h2>
+      <figure class="portal" data-delay="1080">
+        <span class="portal-media"><img src="inner-green-assets/card-ecostove.jpg" alt="Moss-covered boulders in a misty grove" loading="eager" decoding="async"></span>
+        <canvas class="pixel-reveal" aria-hidden="true"></canvas>
+      </figure>
+      <button class="knob" aria-label="了解品牌广告内容">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 21v-7"/><path d="M12 14c0-3.3 2.4-6 5.5-6 .3 3.6-2.2 6.4-5.5 6Z"/>
+          <path d="M12 16c-.1-2.9-2.2-5.2-4.9-5.2C6.8 13.7 9 16 12 16Z"/>
+        </svg>
+      </button>
+    </article>
+
+    <a class="scroll mask" style="--d:1040ms; --pd:9" href="#">探索更多<span class="track"></span></a>
+
+  </div>
+</main>
+
+
+<!-- Liquid controls use CSS highlights, avoiding two multi-pass WebGL contexts. -->
+
+
+<div class="cc-site">
+<section class="cc-intro" id="services"><h2>从创意出发，<br>用 AI 把广告做出来。</h2><p class="cc-lead">围绕品牌要表达的内容，将创意策划、AI 视觉制作与后期整合连接成一条生产线。</p>
+<div class="cc-services">
+<article id="content"><span class="cc-num">01</span><h3>广告创意策划</h3><p>从品牌、产品与受众出发，找到广告的表达方式。</p><ul><li>品牌需求与传播主题梳理</li><li>广告创意与脚本策划</li><li>分镜设计与视觉方向探索</li></ul><span class="cc-type">IDEA & DIRECTION</span></article>
+<article id="animation"><span class="cc-num">02</span><h3>AI 创意广告制作</h3><p>用 AI 生产线连接画面、动态与声音，让创意成为成片。</p><ul><li>角色、产品与场景视觉制作</li><li>AI 动画与广告镜头制作</li><li>剪辑、声音与后期整合</li></ul><span class="cc-type">AI AD PRODUCTION</span></article>
+<article id="game"><span class="cc-num">03</span><h3>广告内容延展</h3><p>围绕同一个创意，探索不同媒介中的品牌表达。</p><ul><li>短视频与账号内容</li><li>动画叙事与系列内容</li><li>互动体验与游戏化创意</li></ul><span class="cc-type">CONTENT & EXPERIENCE</span></article></div></section>
+<section id="about" class="cc-about"><div class="cc-photo"><img src="inner-green-assets/card-ecostove.jpg" alt="薄雾中生长的苔藓与植物，用作创意生长的概念视觉" loading="lazy"><span>让创意，自然生长。</span></div><div><h2>让好创意，<br>走进广告生产线。</h2><p>武汉璀粲数字科技有限公司，专注创意广告制作，利用 AI 生产线将创意转化为广告内容。</p><p>我们从品牌需求与创意表达出发，将脚本、分镜、AI 视觉制作和后期整合连接起来。AI 参与生产，审美、叙事与人工把控贯穿制作，让每一个镜头服务于广告想传递的信息。</p><small>本页生态场景为创意概念视觉，非客户项目展示。</small></div></section>
+<section class="cc-process"><h2>一条生产线，围绕一个好创意。</h2><ol><li><b>01</b><h3>理解品牌</h3><p>明确产品、受众、传播目标与交付需求。</p></li><li><b>02</b><h3>创意与分镜</h3><p>确定广告概念、脚本、视觉风格与镜头设计。</p></li><li><b>03</b><h3>AI 制作与把控</h3><p>推进视觉与动态镜头制作，人工筛选、调整与整合。</p></li><li><b>04</b><h3>后期与交付</h3><p>完成剪辑与声音整合，按约定交付广告成片。</p></li></ol></section>
+<section id="contact" class="cc-contact"><h2>下一支创意广告，<br>从你的品牌开始。</h2><div><p>告诉我们你的产品、受众与想表达的内容。<br>一起，把品牌的想法做成广告。</p><div class="cc-contact-links"><div class="cc-contact-channel"><span>WeChat</span><p data-wechat-account>微信号待补充</p><button type="button" data-copy-wechat hidden>复制微信号</button></div><div class="cc-contact-channel"><span>X</span><p data-x-profile>主页链接待补充</p></div><p class="cc-contact-status" role="status" data-contact-status></p></div></div></section>
+<footer class="cc-footer"><strong>璀粲 <small>数字科技</small></strong><span>© 2026 武汉璀粲数字科技有限公司</span><a href="#hero">回到顶部 ↑</a></footer>
+<aside class="cc-credit">生态首屏基于 <a href="https://github.com/MengTo/threeui" target="_blank" rel="noopener">ThreeUI / Sylva</a> 开源作品改编 · MIT License</aside>
+</div><script src="renewal.js?v=2"></script>
+
+<script src="contacts.js"></script><script src="light-scene.js"></script><script src="cursor-build.js?v=1"></script>
+</body>
+</html>
